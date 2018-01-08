@@ -43,15 +43,7 @@ public:
 	bool Connect(const char* dsn_data);
 	~CODBCDButil(){ DestroyInstance(); };
 	static CODBCDButil * GetInstace();
-	static void DestroyInstance()
-	{
-		if (m_instance != nullptr)
-		{
-			m_instance->Close();
-			m_instance = nullptr;
-		}
-	}
-
+	static void DestroyInstance();
 };
 
 #endif

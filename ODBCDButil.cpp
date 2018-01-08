@@ -62,3 +62,12 @@ bool CODBCDButil::Connect(const char* dsn_data)
 	m_is_connect = true;
 	return true;
 }
+
+void CODBCDButil::DestroyInstance()
+{
+	if (m_instance != nullptr)
+	{
+		m_instance->Close();
+		m_instance = nullptr;
+	}
+}
