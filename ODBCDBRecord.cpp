@@ -91,7 +91,7 @@ int CODBCDBRecord::ExecuteQuery(CODBCDButil* db_connection, const char* sql_data
 
 				temp_buf = new char[(int)col_len + 1];
 				memset(temp_buf, 0, sizeof(temp_buf));
-				SQLGetData(m_handle_stmt, i, SQL_C_CHAR, temp_buf, col_len, NULL);
+				SQLGetData(m_handle_stmt, i, SQL_C_CHAR, temp_buf, col_len+1, NULL);
 			
 				temp_map[col_name] = std::make_tuple((int)col_type, temp_buf);
 
@@ -160,10 +160,15 @@ int CODBCDBRecord::GetColData(const std::string col_name, int data_type, void *c
 	case ODBC_SQL_DOUBLE:
 		*((double*)col_data) = atof(str_col_data.c_str());
 		break;
+	case ODBC_SQL_DATETIME:
+		*((std::string*)col_data) = str_col_data;
+		break;
 	default:
 
 		break;
 	}
+	//if (m_query_data.find(m_data_index - 1) != m_query_data.end())
+	//	m_query_data.erase(m_data_index - 1);
 
 	m_query_data[m_data_index].erase(col_name);
 	return 0;
