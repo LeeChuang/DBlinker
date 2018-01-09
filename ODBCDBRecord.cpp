@@ -152,6 +152,7 @@ int CODBCDBRecord::GetColData(const std::string col_name, int data_type, void *c
 		break;
 	case ODBC_SQL_CHAR:
 	case ODBC_SQL_VARCHAR:
+	case ODBC_SQL_DATETIME:
 		*((std::string*)col_data) = str_col_data;
 		break;
 	case ODBC_SQL_FLOAT:
@@ -159,9 +160,6 @@ int CODBCDBRecord::GetColData(const std::string col_name, int data_type, void *c
 		break;
 	case ODBC_SQL_DOUBLE:
 		*((double*)col_data) = atof(str_col_data.c_str());
-		break;
-	case ODBC_SQL_DATETIME:
-		*((std::string*)col_data) = str_col_data;
 		break;
 	default:
 
