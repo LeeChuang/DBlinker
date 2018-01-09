@@ -66,30 +66,39 @@ int CODBCDBRecord::ExecuteQuery(CODBCDButil* db_connection, const char* sql_data
 
 		m_record_row_count = 0;
 
+		SQLLEN col_len = 0;
+		SQLSMALLINT buf_len = 0;
+		SQLLEN col_type = 0;
+
 		while (true)
 		{
 			SQLRETURN sql_ret = SQLFetch(m_handle_stmt);
 			if (sql_ret == SQL_NO_DATA)
 				break;
+
+			char * temp_buf = nullptr;
+
+			char col_name[256];
+			memset(col_name, 0, sizeof(col_name));
 			std::unordered_map<std::string, std::tuple<int, std::string>> temp_map;
 			for (int i = 1; i <= m_col_count; ++i)
 			{
-				SQLLEN col_len = 0;
-				SQLSMALLINT buf_len = 0;
-				SQLLEN col_type = 0;
-				char col_name[256] = { 0 };
-				
+				char col_name[256] = {0};
+
 				SQLColAttribute(m_handle_stmt, i, SQL_DESC_NAME, col_name, 256, &buf_len, 0);
 				SQLColAttribute(m_handle_stmt, i, SQL_DESC_TYPE, 0, 0, 0, &col_type);
 				SQLColAttribute(m_handle_stmt, i, SQL_DESC_LENGTH, NULL, 0, 0, &col_len);
 
-				char * temp_buf = new char(col_len + 1);
-				SQLGetData(m_handle_stmt, i, SQL_C_CHAR, temp_buf, 256, NULL);
-				temp_map[col_name] = std::make_tuple<>(col_type, temp_buf);
+				temp_buf = new char[(int)col_len + 1];
+				memset(temp_buf, 0, sizeof(temp_buf));
+				SQLGetData(m_handle_stmt, i, SQL_C_CHAR, temp_buf, col_len, NULL);
+			
+				temp_map[col_name] = std::make_tuple((int)col_type, temp_buf);
 
+				delete[] temp_buf;
 			}
-
 			m_query_data[m_record_row_count] = temp_map;
+			temp_map.clear();
 			m_record_row_count++;
 		}
 		//数据查询出来后  置位索引位置
@@ -106,7 +115,7 @@ int CODBCDBRecord::ExecuteQuery(CODBCDButil* db_connection, const char* sql_data
 
 bool CODBCDBRecord::SetQueryHandle(CODBCDButil* db_connection)
 {
-	if (db_connection == NULL)
+	if ((db_connection == NULL) || (!db_connection->GetConnection()))
 		return false;
 
 	try
@@ -142,7 +151,14 @@ int CODBCDBRecord::GetColData(const std::string col_name, int data_type, void *c
 		*((int*)col_data) = atoi(str_col_data.c_str());
 		break;
 	case ODBC_SQL_CHAR:
+	case ODBC_SQL_VARCHAR:
 		*((std::string*)col_data) = str_col_data;
+		break;
+	case ODBC_SQL_FLOAT:
+		*((float*)col_data) = (float)atof(str_col_data.c_str());
+		break;
+	case ODBC_SQL_DOUBLE:
+		*((double*)col_data) = atof(str_col_data.c_str());
 		break;
 	default:
 

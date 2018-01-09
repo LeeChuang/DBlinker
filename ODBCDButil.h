@@ -39,6 +39,7 @@ private:
 
 public:
 	inline SQLHANDLE GetHandleDBC(){ return m_handle_dbc; };
+	inline bool GetConnection(){ return m_is_connect; };
 	void Close();
 	bool Connect(const char* dsn_data);
 	~CODBCDButil(){ DestroyInstance(); };
