@@ -18,8 +18,8 @@ private:
 	map key为字段名称
 	tuple第1个参数为值类型，第2个参数为值
 	*/
-	std::unordered_map<int, std::unordered_map<std::string, std::tuple<int, std::string>>> m_query_data;
-	int m_data_index;				//记录位置索引
+	std::unordered_map<std::string, std::tuple<int, std::string>> m_query_data;
+	//int m_data_index;				//记录位置索引
 
 	bool SetQueryHandle(CODBCDButil* db_connection);
 public:
@@ -28,9 +28,9 @@ public:
 	int ExecuteNonQuery(CODBCDButil* db_connection, const char* sql_data);			//执行非查询语句
 	~CODBCDBRecord();
 
-	inline void MoveFirst(){ m_data_index = 0; };
-	inline void MoveNext(){ m_data_index++; };
-	inline bool IsEnd(){ return m_data_index >= m_record_row_count; };
+	//inline void MoveFirst(){ m_data_index = 0; };
+	bool MoveNext(); 
+	//inline bool IsEnd(){ return m_data_index >= m_record_row_count; };
 	inline int GetRecodeCount(){ return m_record_row_count; };
 
 	//根据字段字段名 获取字段数据

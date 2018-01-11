@@ -1,5 +1,5 @@
 #include "ODBCDButil.h"
-
+#include "glog/logging.h"
 CODBCDButil *CODBCDButil::m_instance = nullptr;
 
 CODBCDButil::CODBCDButil() :m_is_connect(false)
@@ -20,6 +20,8 @@ CODBCDButil::CODBCDButil() :m_is_connect(false)
 	m_ret_code = SQLAllocHandle(SQL_HANDLE_DBC, m_handle_env, &m_handle_dbc);
 	if ((m_ret_code != SQL_SUCCESS) && (m_ret_code != SQL_SUCCESS_WITH_INFO))
 		return;
+
+	//LOG(INFO) << "init ODBCUtil.";
 }
 
 CODBCDButil * CODBCDButil::GetInstace(){
@@ -70,4 +72,5 @@ void CODBCDButil::DestroyInstance()
 		m_instance->Close();
 		m_instance = nullptr;
 	}
+	//LOG(INFO) << "Delete ODBCUtil.";
 }
