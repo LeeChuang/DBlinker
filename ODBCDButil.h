@@ -1,6 +1,5 @@
-#pragma once
-#ifndef ODBC_DB_UTIL_H
-#define ODBC_DB_UTIL_H
+#ifndef _ODBC_DB_UTIL_H
+#define _ODBC_DB_UTIL_H
 #include <windows.h>
 #include <sql.h>
 #include <sqlext.h>

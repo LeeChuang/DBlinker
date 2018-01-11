@@ -165,8 +165,8 @@ int CODBCDBRecord::GetColData(const std::string col_name, int data_type, void *c
 
 		break;
 	}
-	//if (m_query_data.find(m_data_index - 1) != m_query_data.end())
-	//	m_query_data.erase(m_data_index - 1);
+
+	//查询出来之后 将当前数据从map中删除
 	m_query_data.erase(col_name);
 	return 0;
 }

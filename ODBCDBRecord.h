@@ -1,6 +1,5 @@
-#pragma once
-#ifndef ODBC_DB_RECORD_H
-#define ODBC_DB_RECORD_H
+#ifndef _ODBC_DB_RECORD_H
+#define _ODBC_DB_RECORD_H
 
 #include "ODBCDButil.h"
 
